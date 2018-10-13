@@ -35,11 +35,10 @@ def news():
         return jsonify(db.many_news(amount))
     elif request.method == 'POST':
         content = request.get_json()
-        print(content)
         db.add_news(
-            request.form['title'],
-            request.form['preview'],
-            request.form['content'],
+            content['title'],
+            content['preview'],
+            content['content'],
         )
         conn.commit()
 
