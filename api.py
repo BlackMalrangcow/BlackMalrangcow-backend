@@ -23,7 +23,7 @@ app.json_encoder = CustomJSONEncoder
 
 DATABASE_URL = os.environ['DATABASE_URL']
 
-conn = psycopg2.connect(DATABASE_URL, ssl_mode='require')
+conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 cursor = conn.cursor()
 db = model.Database(cursor)
 
