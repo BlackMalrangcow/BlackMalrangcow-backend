@@ -12,7 +12,7 @@ class Database:
         } for news in self.cursor.fetchall()]
 
     def news(self, id):
-        self.cursor.execute("SELF * FROM news WHERE id = %s", (id,))
+        self.cursor.execute("SELECT * FROM news WHERE id = %s", (id,))
 
         _, title, _, content, _ = self.cursor.fetchone()
 
