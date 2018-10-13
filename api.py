@@ -30,10 +30,9 @@ db = model.Database(cursor)
 @app.route('/news', methods=['GET', 'POST'])
 def news():
     if request.method == 'GET':
-        random = True if request.args.get('random') == 't' else False
         amount = int(request.args.get('amount'))
 
-        return jsonify(db.many_news(amount, random))
+        return jsonify(db.many_news(amount))
     elif request.method == 'POST':
         db.add_news(
             request.form['title'],

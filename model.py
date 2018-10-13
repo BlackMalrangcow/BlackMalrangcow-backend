@@ -2,11 +2,8 @@ class Database:
     def __init__(self, cursor):
         self.cursor = cursor
 
-    def many_news(self, amount, random):
-        if random:
-            self.cursor.execute("SELECT * FROM news ORDER BY random() LIMIT %s", (amount,))
-        else:
-            self.cursor.execute("SELECT * FROM news LIMIT %s", (amount,))
+    def many_news(self, amount):
+        self.cursor.execute("SELECT * FROM news ORDER BY random() LIMIT %s", (amount,))
 
         return [{
             "id": news[0],
