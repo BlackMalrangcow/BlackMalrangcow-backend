@@ -37,6 +37,7 @@ def news():
         return jsonify(db.many_news(amount))
     elif request.method == 'POST':
         content = request.get_json()
+        from pprint import pprint; pprint(content)
         db.add_news(
             content['title'],
             content['preview'],
