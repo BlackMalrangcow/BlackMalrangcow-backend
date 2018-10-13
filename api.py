@@ -1,27 +1,12 @@
 import os
+import re
 import psycopg2
 import model
-from datetime import date
 from flask import Flask, request, jsonify
-from flask.json import JSONEncoder
 from flask_cors import CORS
-
-class CustomJSONEncoder(JSONEncoder):
-
-    def default(self, obj):
-        try:
-            if isinstance(obj, date):
-                return obj.isoformat()
-            iterable = iter(obj)
-        except TypeError:
-            pass
-        else:
-            return list(iterable)
-        return JSONEncoder.default(self, obj)
 
 app = Flask(__name__)
 CORS(app)
-app.json_encoder = CustomJSONEncoder
 
 DATABASE_URL = os.environ['DATABASE_URL']
 
@@ -33,24 +18,28 @@ db = model.Database(cursor)
 def news():
     if request.method == 'GET':
         amount = int(request.args.get('amount'))
+        category = int(request.args.get('category'))
 
-        return jsonify(db.many_news(amount))
+        return jsonify(db.many_news(amount, category))
     elif request.method == 'POST':
         content = request.get_json(cache=False)
-        from pprint import pprint; pprint(content)
         db.add_news(
             content['title'],
-            content['preview'],
+            get_image(content['content']),
+            content['category'],
             content['content'],
         )
         conn.commit()
 
         return 'Success!'
 
-@app.route('/news/<int:id>')
-def news_by_id(id):
-    return jsonify(db.news(id))
+@app.route('/news/<int:category>/<string:title>')
+def news_by_id(category, title):
+    return jsonify(db.news(category, title))
 
+def get_image(content):
+    s = re.findall(r"!\[.*\]\(.*\)", content)[0]
+    return s[s.find("(")+1:s.find(")")]
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=os.environ['PORT'])

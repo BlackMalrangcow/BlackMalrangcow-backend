@@ -2,26 +2,24 @@ class Database:
     def __init__(self, cursor):
         self.cursor = cursor
 
-    def many_news(self, amount):
-        self.cursor.execute("SELECT * FROM news ORDER BY random() LIMIT %s", (amount,))
+    def many_news(self, amount, category):
+        self.cursor.execute("SELECT * FROM news WHERE category = %s ORDER BY random() LIMIT %s", (category, amount))
 
         return [{
-            "id": news[0],
-            "title": news[1],
-            "preview": news[2],
+            "title": news[0],
+            "preview": news[1],
         } for news in self.cursor.fetchall()]
 
-    def news(self, id):
-        self.cursor.execute("SELECT * FROM news WHERE id = %s", (id,))
+    def news(self, category, title):
+        self.cursor.execute("SELECT * FROM news WHERE category = %s AND title = %s", (category, title))
 
-        _, title, _, content, _ = self.cursor.fetchone()
+        content = self.cursor.fetchone()[2]
 
         return {
-            "title": title,
             "content": content,
         }
 
-    def add_news(self, title, preview, content):
+    def add_news(self, title, preview, category, content):
         self.cursor.execute("""
         INSERT INTO news (title, preview, content, category)
-        VALUES (%s, %s, %s, %s)""", (title, preview, content, 5))
+        VALUES (%s, %s, %s, %s)""", (title, preview, content, category))
