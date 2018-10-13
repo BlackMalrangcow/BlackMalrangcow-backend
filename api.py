@@ -47,3 +47,7 @@ def news():
 @app.route('/news/<int:id>')
 def news_by_id(id):
     return jsonify(db.news(id))
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=os.environ['PORT'])
