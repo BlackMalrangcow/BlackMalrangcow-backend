@@ -4,6 +4,7 @@ import model
 from datetime import date
 from flask import Flask, request, jsonify
 from flask.json import JSONEncoder
+from flask_cors import CORS
 
 class CustomJSONEncoder(JSONEncoder):
 
@@ -19,6 +20,7 @@ class CustomJSONEncoder(JSONEncoder):
         return JSONEncoder.default(self, obj)
 
 app = Flask(__name__)
+CORS(app)
 app.json_encoder = CustomJSONEncoder
 
 DATABASE_URL = os.environ['DATABASE_URL']
